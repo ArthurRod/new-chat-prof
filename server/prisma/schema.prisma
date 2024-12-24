@@ -12,3 +12,154 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique @db.VarChar(50)
+  password String
+  role     Role
+
+  school  School?
+  teacher Teacher?
+  parent  Parent?
+}
+
+model School {
+  id           Int         @id @default(autoincrement())
+  userId       Int         @unique
+  nameStreetId String      @unique @db.VarChar(191)
+  name         String      @db.VarChar(191)
+  fixedPeriod  FixedPeriod
+
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  schoolAddress SchoolAddress?
+  teachers      SchoolsTeachers[]
+  parents       SchoolsParents[]
+  students      Student[]
+}
+
+model SchoolAddress {
+  id           Int     @id @default(autoincrement())
+  schoolId     Int     @unique
+  zipCode      Int
+  country      String  @db.VarChar(100)
+  state        String  @db.VarChar(100)
+  city         String  @db.VarChar(100)
+  neighborhood String  @db.VarChar(100)
+  street       String  @db.VarChar(100)
+  number       Int
+  complement   String? @db.VarChar(100)
+
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+}
+
+model SchoolsTeachers {
+  id         Int     @id @default(autoincrement())
+  schoolId   Int
+  teacherId  Int
+  isApproved Boolean @default(false)
+
+  school  School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  teacher Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@unique([schoolId, teacherId])
+  @@map("schools_teachers")
+}
+
+model SchoolsParents {
+  id       Int @id @default(autoincrement())
+  schoolId Int @unique
+  parentId Int @unique
+
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  parent Parent @relation(fields: [parentId], references: [id], onDelete: Cascade)
+
+  @@unique([schoolId, parentId])
+  @@map("schools_parents")
+}
+
+model Teacher {
+  id       Int    @id @default(autoincrement())
+  userId   Int    @unique
+  name     String @db.VarChar(191)
+  subjects String @db.VarChar(191)
+
+  user    User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  schools SchoolsTeachers[]
+}
+
+model Parent {
+  id     Int    @id @default(autoincrement())
+  userId Int    @unique
+  name   String @db.VarChar(191)
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  schools   SchoolsParents[]
+  childrens Student[]
+}
+
+model Student {
+  id           Int           @id @default(autoincrement())
+  schoolId     Int           @unique
+  parentId     Int           @unique
+  name         String        @db.VarChar(191)
+  grades       Grade[]
+  totalGrades  TotalGrade[]
+  observations Observation[]
+
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  parent Parent @relation(fields: [parentId], references: [id], onDelete: Cascade)
+}
+
+model Grade {
+  id            Int       @id @default(autoincrement())
+  typeGrade     TypeGrade
+  date          DateTime
+  value         Int
+  total         Int
+  numberedPerid Int
+  studentId     Int       @unique
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}
+
+model TotalGrade {
+  id            Int         @id @default(autoincrement())
+  value         Int
+  numberedPerid Int
+  fixedPeriod   FixedPeriod
+  year          Int
+  studentId     Int         @unique
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}
+
+model Observation {
+  id          Int      @id @default(autoincrement())
+  date        DateTime
+  description String
+  studentId   Int      @unique
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  PARENT
+  TEACHER
+  SCHOOL
+}
+
+enum FixedPeriod {
+  PERIODO
+  MES
+  BIMESTRE
+  SEMESTRE
+  ANO
+}
+
+enum TypeGrade {
+  AVALIACAO
+  TRABALHO
+  EXERCICIO
+  EXTRA
+}
