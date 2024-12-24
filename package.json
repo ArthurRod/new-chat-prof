@@ -1,0 +1,23 @@
+{
+  "name": "chat-prof",
+  "version": "1.0.0",
+  "description": "Sistema inteligente de monitoramento e análise de desempenho estudantil",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "educação",
+    "desempenho-estudantil",
+    "monitoramento",
+    "análise",
+    "inteligência",
+    "sistema",
+    "chat-professor"
+  ],
+  "author": "Arthur Rodrigues <contato@arthurs-portfolio.arcawave.dev> (https://arthurs-portfolio.arcawave.dev)",
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11"
+  }
+}
