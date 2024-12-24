@@ -20,6 +20,8 @@
   "license": "ISC",
   "description": "Sistema inteligente de monitoramento e análise de desempenho estudantil",
   "dependencies": {
+    "@fastify/cors": "^10.0.1",
+    "@fastify/http-proxy": "^11.0.0",
     "fastify": "^5.2.0"
   }
 }
