@@ -5,9 +5,12 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"npm run dev:api-gateway\" \"npm run dev:auth\"",
+    "dev": "concurrently \"npm run dev:api-gateway\" \"npm run dev:auth\" \"npm run dev:user\" \"npm run dev:school\" \"npm run dev:teacher\"",
     "dev:api-gateway": "tsx watch services/api-gateway/index.ts",
     "dev:auth": "tsx watch services/auth/index.ts",
+    "dev:user": "tsx watch services/user/index.ts",
+    "dev:school": "tsx watch services/school/index.ts",
+    "dev:teacher": "tsx watch services/teacher/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

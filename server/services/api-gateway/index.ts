@@ -15,6 +15,21 @@ app.register(proxy, {
   prefix: "/api/auth",
   rewritePrefix: "/api/auth",
 });
+app.register(proxy, {
+  upstream: "http://localhost:3335",
+  prefix: "/api/users",
+  rewritePrefix: "/api/users",
+});
+app.register(proxy, {
+  upstream: "http://localhost:3336",
+  prefix: "/api/schools",
+  rewritePrefix: "/api/schools",
+});
+app.register(proxy, {
+  upstream: "http://localhost:3337",
+  prefix: "/api/teachers",
+  rewritePrefix: "/api/teachers",
+});
 
 app
   .listen({
