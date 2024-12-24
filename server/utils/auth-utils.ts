@@ -2,7 +2,7 @@ import {jwtVerify, SignJWT} from "jose";
 import {DecodedUser} from "../types/DecodedUser";
 import {FastifyRequest, RouteGenericInterface} from "fastify";
 
-const JWT_SECRET = "sua_chave_secreta";
+const JWT_SECRET = process.env.JWT_SECRET;
 const secret = new TextEncoder().encode(JWT_SECRET);
 
 export async function generateToken(user: any) {
