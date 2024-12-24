@@ -1,5 +1,5 @@
-import { PrismaError } from "../types/PrismaError";
-import { Prisma } from "@prisma/client";
+import {PrismaError} from "../types/PrismaError";
+import {Prisma} from "@prisma/client";
 
 const errorCodeMapping: Record<
   string,

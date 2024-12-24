@@ -1,4 +1,4 @@
-import { Error } from "../types/Error";
+import {Error} from "../types/Error";
 
 export const handleAxiosError = (error: any): Error | undefined => {
   const errorData = error?.response?.data;

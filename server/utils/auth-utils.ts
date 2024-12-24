@@ -1,6 +1,6 @@
-import { JWTPayload, jwtVerify, SignJWT } from "jose";
-import { DecodedUser } from "../types/DecodedUser";
-import { FastifyRequest, RouteGenericInterface } from "fastify";
+import {jwtVerify, SignJWT} from "jose";
+import {DecodedUser} from "../types/DecodedUser";
+import {FastifyRequest, RouteGenericInterface} from "fastify";
 
 const JWT_SECRET = "sua_chave_secreta";
 const secret = new TextEncoder().encode(JWT_SECRET);
@@ -11,7 +11,7 @@ export async function generateToken(user: any) {
     email: user.email,
     role: user.role,
   })
-    .setProtectedHeader({ alg: "HS256" })
+    .setProtectedHeader({alg: "HS256"})
     .setExpirationTime("24h")
     .sign(secret);
 
@@ -27,7 +27,7 @@ export async function verifyToken<T extends RouteGenericInterface>(
 
     if (!token) throw new Error("Token não fornecido");
 
-    const { payload } = await jwtVerify(token, secret);
+    const {payload} = await jwtVerify(token, secret);
 
     const decoded = {
       userId: payload.userId,

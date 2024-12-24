@@ -1,4 +1,4 @@
-import { ZodTreatedError } from "./ZodTreatedError";
+import {ZodTreatedError} from "./ZodTreatedError";
 
 export type CustomZodError = {
   code: number;

@@ -1,5 +1,5 @@
-import { ZodError } from "zod";
-import { CustomZodError } from "../types/CustomZodError";
+import {ZodError} from "zod";
+import {CustomZodError} from "../types/CustomZodError";
 
 const errorHandlers: Record<string, (error: ZodError) => CustomZodError> = {
   ZodError: (error: ZodError) => ({
