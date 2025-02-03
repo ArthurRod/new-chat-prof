@@ -28,6 +28,8 @@
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^22.10.2",
     "concurrently": "^9.1.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
     "prisma": "^6.1.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
