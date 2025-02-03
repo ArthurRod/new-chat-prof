@@ -1,9 +1,10 @@
 {
   "name": "chat-prof-server",
   "version": "1.0.0",
-  "description": "Sistema inteligente de monitoramento e análise de desempenho estudantil",
   "main": "index.js",
   "type": "module",
+  "author": "Arthur Rodrigues <contato.arthurrod@gmail.com> (https://github.com/ArthurRod)",
+  "license": "ISC",
   "scripts": {
     "dev": "concurrently \"npm run dev:api-gateway\" \"npm run dev:auth\" \"npm run dev:user\" \"npm run dev:school\" \"npm run dev:teacher\"",
     "dev:api-gateway": "tsx watch services/api-gateway/index.ts",
@@ -13,18 +14,6 @@
     "dev:teacher": "tsx watch services/teacher/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "educação",
-    "desempenho-estudantil",
-    "monitoramento",
-    "análise",
-    "inteligência",
-    "sistema",
-    "server",
-    "chat-professor"
-  ],
-  "author": "Arthur Rodrigues <contato@arthurs-portfolio.arcawave.dev> (https://arthurs-portfolio.arcawave.dev)",
-  "license": "ISC",
   "dependencies": {
     "@fastify/cors": "^10.0.1",
     "@fastify/http-proxy": "^11.0.0",
