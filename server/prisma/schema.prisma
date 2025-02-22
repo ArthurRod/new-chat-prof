@@ -14,8 +14,9 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique @db.VarChar(50)
+  id Int @id @default(autoincrement())
+
+  email    String @unique @db.VarChar(191)
   password String
   role     Role
 
@@ -25,13 +26,15 @@ model User {
 }
 
 model School {
-  id           Int         @id @default(autoincrement())
-  userId       Int         @unique
+  id Int @id @default(autoincrement())
+
   nameStreetId String      @unique @db.VarChar(191)
   name         String      @db.VarChar(191)
   fixedPeriod  FixedPeriod
 
-  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int  @unique
+
   schoolAddress SchoolAddress?
   teachers      SchoolsTeachers[]
   parents       SchoolsParents[]
@@ -39,108 +42,108 @@ model School {
 }
 
 model SchoolAddress {
-  id           Int     @id @default(autoincrement())
-  schoolId     Int     @unique
-  zipCode      Int
-  country      String  @db.VarChar(100)
-  state        String  @db.VarChar(100)
-  city         String  @db.VarChar(100)
-  neighborhood String  @db.VarChar(100)
-  street       String  @db.VarChar(100)
-  number       Int
-  complement   String? @db.VarChar(100)
+  id Int @id @default(autoincrement())
 
-  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  zipCode      Int
+  country      String  @db.VarChar(191)
+  state        String  @db.VarChar(191)
+  city         String  @db.VarChar(191)
+  neighborhood String  @db.VarChar(191)
+  street       String  @db.VarChar(191)
+  number       Int
+  complement   String? @db.VarChar(191)
+
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  schoolId Int    @unique
 }
 
 model SchoolsTeachers {
-  id         Int     @id @default(autoincrement())
-  schoolId   Int
-  teacherId  Int
+  id Int @id @default(autoincrement())
+
   isApproved Boolean @default(false)
 
-  school  School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  teacher Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  school    School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  schoolId  Int
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  teacherId Int
 
   @@unique([schoolId, teacherId])
   @@map("schools_teachers")
 }
 
 model SchoolsParents {
-  id       Int @id @default(autoincrement())
-  schoolId Int @unique
-  parentId Int @unique
+  id Int @id @default(autoincrement())
 
-  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  parent Parent @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  isApproved Boolean @default(false)
+
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  schoolId Int    @unique
+  parent   Parent @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  parentId Int    @unique
 
   @@unique([schoolId, parentId])
   @@map("schools_parents")
 }
 
 model Teacher {
-  id       Int    @id @default(autoincrement())
-  userId   Int    @unique
+  id Int @id @default(autoincrement())
+
   name     String @db.VarChar(191)
   subjects String @db.VarChar(191)
 
-  user    User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int  @unique
+
   schools SchoolsTeachers[]
 }
 
 model Parent {
-  id     Int    @id @default(autoincrement())
-  userId Int    @unique
-  name   String @db.VarChar(191)
+  id Int @id @default(autoincrement())
 
-  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name String @db.VarChar(191)
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int  @unique
+
   schools   SchoolsParents[]
   childrens Student[]
 }
 
 model Student {
-  id           Int           @id @default(autoincrement())
-  schoolId     Int           @unique
-  parentId     Int           @unique
-  name         String        @db.VarChar(191)
-  grades       Grade[]
-  totalGrades  TotalGrade[]
-  observations Observation[]
+  id Int @id @default(autoincrement())
 
-  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  parent Parent @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  name String @db.VarChar(191)
+
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  schoolId Int    @unique
+  parent   Parent @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  parentId Int    @unique
+
+  grades       Grade[]
+  observations Observation[]
 }
 
 model Grade {
-  id            Int       @id @default(autoincrement())
+  id Int @id @default(autoincrement())
+
   typeGrade     TypeGrade
-  date          DateTime
   value         Int
   total         Int
   numberedPerid Int
-  studentId     Int       @unique
+  date          DateTime
 
-  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
-}
-
-model TotalGrade {
-  id            Int         @id @default(autoincrement())
-  value         Int
-  numberedPerid Int
-  fixedPeriod   FixedPeriod
-  year          Int
-  studentId     Int         @unique
-
-  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int
 }
 
 model Observation {
-  id          Int      @id @default(autoincrement())
-  date        DateTime
-  description String
-  studentId   Int      @unique
+  id Int @id @default(autoincrement())
 
-  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  description String
+  date        DateTime
+
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int
 }
 
 enum Role {
