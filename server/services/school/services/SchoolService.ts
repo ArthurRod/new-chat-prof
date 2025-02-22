@@ -1,12 +1,12 @@
 import axios from "axios";
-import { prisma } from "../../../libs/prisma";
-import { SchoolInput } from "../schemas/SchoolSchema";
-import { CreateUserInput } from "../schemas/UserSchema";
+import {prisma} from "../../../libs/prisma";
+import {CreateSchoolBody} from "../interfaces/SchoolInterfaces";
+import {CreateUserBody} from "../interfaces/UserInterfaces";
 
 export class SchoolService {
-  getSchoolByUserId = async (userId: number) => {
+  getSchoolBySchoolId = async (schoolId: number, userId: number) => {
     const school = await prisma.school.findUnique({
-      where: { userId: userId },
+      where: {id: schoolId, userId},
       select: {
         id: true,
         userId: true,
@@ -27,7 +27,7 @@ export class SchoolService {
         },
       },
       select: {
-        id: true,
+        userId: true,
         nameStreetId: true,
       },
     });
@@ -35,26 +35,14 @@ export class SchoolService {
     return schools;
   };
 
-  createSchool = async (data: SchoolInput) => {
-    const school = await prisma.school.create({
-      data: {
-        userId: data.userId,
-        nameStreetId: data.nameStreetId,
-        name: data.name,
-        fixedPeriod: data.fixedPeriod,
-      },
-    });
+  createSchool = async (data: CreateSchoolBody) => {
+    const school = await prisma.school.create({data});
 
     return school;
   };
 
-  createSchoolUser = async (data: CreateUserInput) => {
-    const userData = await axios.post("http://localhost:3333/api/users", {
-      email: data.email,
-      password: data.password,
-      confirmPassword: data.confirmPassword,
-      role: data.role,
-    });
+  createSchoolUser = async (data: CreateUserBody) => {
+    const userData = await axios.post("http://localhost:3333/api/users", data);
 
     const user = userData.data.data;
 

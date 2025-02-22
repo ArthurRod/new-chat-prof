@@ -1,11 +1,16 @@
-import { FastifyRequest, FastifyReply } from "fastify";
-import { handleError } from "../../../utils/handle-error";
-import { SchoolsTeachersService } from "../services/SchoolsTeachersService";
+import {FastifyReply, FastifyRequest} from "fastify";
+import {verifyToken} from "../../../utils/auth-utils";
+import {handleError} from "../../../utils/handle-error";
 import {
-  CreateSchoolsTeachersInput,
+  CreateSchoolsTeachersBody,
+  GetSchoolsTeachersBySchoolIdParams,
+  UpdateSchoolsTeachersParams,
+} from "../interfaces/SchoolsTeachersInterfaces";
+import {
   CreateSchoolsTeachersSchema,
-  SchoolsTeachersInput,
+  UpdateSchoolsTeachersSchema,
 } from "../schemas/SchoolsTeachersSchema";
+import {SchoolsTeachersService} from "../services/SchoolsTeachersService";
 
 export class SchoolsTeachersController {
   private schoolsTeachersService: SchoolsTeachersService;
@@ -15,53 +20,22 @@ export class SchoolsTeachersController {
   }
 
   getSchoolsTeachersBySchoolId = async (
-    request: FastifyRequest<{ Params: { schoolId: string } }>,
-    response: FastifyReply,
+    request: FastifyRequest<{Params: GetSchoolsTeachersBySchoolIdParams}>,
+    response: FastifyReply
   ) => {
     try {
-      const { schoolId } = request.params;
+      const {schoolId} = request.params;
+      const convertedSchoolId = parseInt(schoolId);
+      const decoded = await verifyToken(request);
+      const decodedUserId = parseInt(decoded.userId);
+
       const schoolsTeachers =
         await this.schoolsTeachersService.getSchoolsTeachersBySchoolId(
-          parseInt(schoolId),
+          convertedSchoolId,
+          decodedUserId
         );
 
-      if (!schoolsTeachers || schoolsTeachers.length === 0)
-        return response.status(404).send({
-          code: 404,
-          status: "Not Found",
-          message: "Não foram encontrados professores cadastrados nesta escola",
-        });
-
-      return response.code(200).send({
-        code: 200,
-        status: "OK",
-        message: "Successfully",
-        data: schoolsTeachers,
-      });
-    } catch (error) {
-      const errorResponse = handleError(error);
-
-      return response.code(errorResponse.code).send(errorResponse);
-    }
-  };
-
-  getSchoolsTeachersByTeacherId = async (
-    request: FastifyRequest<{ Params: { teacherId: string } }>,
-    response: FastifyReply,
-  ) => {
-    try {
-      const { teacherId } = request.params;
-      const schoolsTeachers =
-        await this.schoolsTeachersService.getSchoolsTeachersByTeacherId(
-          parseInt(teacherId),
-        );
-
-      if (!schoolsTeachers || schoolsTeachers.length === 0)
-        return response.status(404).send({
-          code: 404,
-          status: "Not Found",
-          message: "Não foram encontrados escolas cadastradas",
-        });
+      if (!schoolsTeachers) throw new Error("NOT_FOUND");
 
       return response.code(200).send({
         code: 200,
@@ -77,23 +51,20 @@ export class SchoolsTeachersController {
   };
 
   createSchoolsTeachers = async (
-    request: FastifyRequest<{ Body: CreateSchoolsTeachersInput }>,
-    response: FastifyReply,
+    request: FastifyRequest<{Body: CreateSchoolsTeachersBody}>,
+    response: FastifyReply
   ) => {
     try {
       const parsedSchoolsTeachersBody = CreateSchoolsTeachersSchema.parse(
-        request.body,
+        request.body
       );
-
-      console.log(parsedSchoolsTeachersBody.schoolId);
-
       const schoolsTeachersData = {
         schoolId: parsedSchoolsTeachersBody.schoolId,
         teacherId: parsedSchoolsTeachersBody.teacherId,
       };
       const newSchoolsTeachers =
         await this.schoolsTeachersService.createSchoolsTeachers(
-          schoolsTeachersData,
+          schoolsTeachersData
         );
 
       return response.code(200).send({
@@ -110,13 +81,25 @@ export class SchoolsTeachersController {
   };
 
   updateSchoolsTeachers = async (
-    request: FastifyRequest<{ Params: { id: string } }>,
-    response: FastifyReply,
+    request: FastifyRequest<{Params: UpdateSchoolsTeachersParams}>,
+    response: FastifyReply
   ) => {
     try {
-      const { id } = request.params;
+      const {id} = request.params;
+      const convertedId = parseInt(id);
+      const decoded = await verifyToken(request);
+      const decodedUserId = parseInt(decoded.userId);
+
+      const parsedSchoolsTeachersBody = UpdateSchoolsTeachersSchema.parse(
+        request.body
+      );
+
       const schoolsTeachers =
-        await this.schoolsTeachersService.updateSchoolsTeachers(parseInt(id));
+        await this.schoolsTeachersService.updateSchoolsTeachers(
+          decodedUserId,
+          convertedId,
+          parsedSchoolsTeachersBody.isApproved
+        );
 
       return response.code(200).send({
         code: 200,

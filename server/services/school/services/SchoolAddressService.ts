@@ -1,9 +1,9 @@
-import { prisma } from "../../../libs/prisma";
-import { SchoolAddressInput } from "../schemas/SchoolAddressSchema";
+import {prisma} from "../../../libs/prisma";
+import {CreateSchoolAddressBody} from "../interfaces/SchoolAddressInterfaces";
 
 export class SchoolAddressService {
-  createSchoolAddress = async (data: SchoolAddressInput) => {
-    const schoolAddress = await prisma.schoolAddress.create({ data });
+  createSchoolAddress = async (data: CreateSchoolAddressBody) => {
+    const schoolAddress = await prisma.schoolAddress.create({data});
 
     return schoolAddress;
   };

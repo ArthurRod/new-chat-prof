@@ -1,9 +1,14 @@
-import { FastifyRequest, FastifyReply } from "fastify";
-import { CreateSchoolInput, CreateSchoolSchema } from "../schemas/SchoolSchema";
-import { handleError } from "../../../utils/handle-error";
-import { SchoolService } from "../services/SchoolService";
-import { SchoolAddressService } from "../services/SchoolAddressService";
-import { CreateSchoolAddressSchema } from "../schemas/SchoolAddressSchema";
+import {FastifyReply, FastifyRequest} from "fastify";
+import {verifyToken} from "../../../utils/auth-utils";
+import {handleError} from "../../../utils/handle-error";
+import {
+  CreateSchoolFullBody,
+  GetSchoolByNameStreetIdQuery,
+  GetSchoolBySchoolIdParams,
+} from "../interfaces/SchoolInterfaces";
+import {CreateSchoolFullBodySchema} from "../schemas/SchoolSchema";
+import {SchoolAddressService} from "../services/SchoolAddressService";
+import {SchoolService} from "../services/SchoolService";
 
 export class SchoolController {
   private schoolService: SchoolService;
@@ -14,22 +19,22 @@ export class SchoolController {
     this.schoolAddressService = new SchoolAddressService();
   }
 
-  getSchoolByUserId = async (
-    request: FastifyRequest<{ Params: { userId: string } }>,
-    response: FastifyReply,
+  getSchoolBySchoolId = async (
+    request: FastifyRequest<{Params: GetSchoolBySchoolIdParams}>,
+    response: FastifyReply
   ) => {
     try {
-      const { userId } = request.params;
-      const school = await this.schoolService.getSchoolByUserId(
-        parseInt(userId),
+      const {schoolId} = request.params;
+      const convertedSchoolId = parseInt(schoolId);
+      const decoded = await verifyToken(request);
+      const decodedUserId = parseInt(decoded.userId);
+
+      const school = await this.schoolService.getSchoolBySchoolId(
+        convertedSchoolId,
+        decodedUserId
       );
 
-      if (!school)
-        return response.status(404).send({
-          code: 404,
-          status: "Not Found",
-          message: "Não foram encontradas escolas com esse identificador",
-        });
+      if (!school) throw new Error("NOT_FOUND");
 
       return response.code(200).send({
         code: 200,
@@ -45,20 +50,16 @@ export class SchoolController {
   };
 
   getSchoolByNameStreetId = async (
-    request: FastifyRequest<{ Querystring: { nameStreetId: string } }>,
-    response: FastifyReply,
+    request: FastifyRequest<{Querystring: GetSchoolByNameStreetIdQuery}>,
+    response: FastifyReply
   ) => {
     try {
-      const { nameStreetId } = request.query;
+      const {nameStreetId} = request.query;
+
       const schools =
         await this.schoolService.getSchoolByNameStreetId(nameStreetId);
 
-      if (!schools || schools.length === 0)
-        return response.status(404).send({
-          code: 404,
-          status: "Not Found",
-          message: `Não encontrado.`,
-        });
+      if (!schools) throw new Error("NOT_FOUND");
 
       return response.code(200).send({
         code: 200,
@@ -74,37 +75,49 @@ export class SchoolController {
   };
 
   createSchool = async (
-    request: FastifyRequest<{ Body: CreateSchoolInput }>,
-    response: FastifyReply,
+    request: FastifyRequest<{Body: CreateSchoolFullBody}>,
+    response: FastifyReply
   ) => {
     try {
-      const parsedSchoolBody = CreateSchoolSchema.parse(request.body);
-      const parsedSchoolAddressBody = CreateSchoolAddressSchema.parse(
-        request.body,
-      );
+      const parsedBody = CreateSchoolFullBodySchema.parse(request.body);
 
       const userData = {
-        email: parsedSchoolBody.email,
-        password: parsedSchoolBody.password,
-        confirmPassword: parsedSchoolBody.confirmPassword,
-        role: parsedSchoolBody.role,
+        email: parsedBody.email,
+        password: parsedBody.password,
+        confirmPassword: parsedBody.confirmPassword,
+        role: parsedBody.role,
       };
-      const newUser = await this.schoolService.createSchoolUser(userData);
 
       const schoolData = {
-        userId: newUser.id,
-        nameStreetId: `${newUser.id} - ${parsedSchoolBody.name} - ${parsedSchoolBody.street}`,
-        name: parsedSchoolBody.name,
-        fixedPeriod: parsedSchoolBody.fixedPeriod,
+        name: parsedBody.name,
+        fixedPeriod: parsedBody.fixedPeriod,
       };
-      const newSchool = await this.schoolService.createSchool(schoolData);
 
       const schoolAddressData = {
-        schoolId: newSchool.id,
-        ...parsedSchoolAddressBody,
+        zipCode: parsedBody.zipCode,
+        country: parsedBody.country,
+        state: parsedBody.state,
+        city: parsedBody.city,
+        neighborhood: parsedBody.neighborhood,
+        street: parsedBody.street,
+        number: parsedBody.number,
+        complement: parsedBody.complement,
       };
-      const newSchoolAddress =
-        await this.schoolAddressService.createSchoolAddress(schoolAddressData);
+
+      const newUser = await this.schoolService.createSchoolUser(userData);
+
+      const newSchool = await this.schoolService.createSchool({
+        ...schoolData,
+        userId: newUser.id,
+        nameStreetId: `${newUser.id} - ${schoolData.name} - ${schoolAddressData.street}`,
+      });
+
+      const schoolAddress = await this.schoolAddressService.createSchoolAddress(
+        {
+          schoolId: newSchool.id,
+          ...schoolAddressData,
+        }
+      );
 
       return response.code(200).send({
         code: 200,

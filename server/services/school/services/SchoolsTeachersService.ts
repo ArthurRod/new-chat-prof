@@ -1,12 +1,13 @@
-import { prisma } from "../../../libs/prisma";
-import { SchoolsTeachersInput } from "../schemas/SchoolsTeachersSchema";
+import {prisma} from "../../../libs/prisma";
+import {CreateSchoolsTeachersBody} from "../interfaces/SchoolsTeachersInterfaces";
 
 export class SchoolsTeachersService {
-  getSchoolsTeachersBySchoolId = async (schoolId: number) => {
+  getSchoolsTeachersBySchoolId = async (schoolId: number, userId: number) => {
     const schoolsTeachers = await prisma.schoolsTeachers.findMany({
       where: {
-        schoolId: {
-          equals: schoolId,
+        schoolId,
+        school: {
+          userId,
         },
       },
       select: {
@@ -19,24 +20,7 @@ export class SchoolsTeachersService {
     return schoolsTeachers;
   };
 
-  getSchoolsTeachersByTeacherId = async (teacherId: number) => {
-    const schoolsTeachers = await prisma.schoolsTeachers.findMany({
-      where: {
-        teacherId: {
-          equals: teacherId,
-        },
-      },
-      select: {
-        id: true,
-        isApproved: true,
-        school: true,
-      },
-    });
-
-    return schoolsTeachers;
-  };
-
-  createSchoolsTeachers = async (data: SchoolsTeachersInput) => {
+  createSchoolsTeachers = async (data: CreateSchoolsTeachersBody) => {
     const schoolsTeachers = await prisma.schoolsTeachers.create({
       data: {
         schoolId: data.schoolId,
@@ -47,13 +31,20 @@ export class SchoolsTeachersService {
     return schoolsTeachers;
   };
 
-  updateSchoolsTeachers = async (id: number) => {
+  updateSchoolsTeachers = async (
+    id: number,
+    userId: number,
+    isApproved: boolean
+  ) => {
     const schoolsTeachers = await prisma.schoolsTeachers.update({
       where: {
         id: id,
+        school: {
+          userId,
+        },
       },
       data: {
-        isApproved: true,
+        isApproved,
       },
     });
 
