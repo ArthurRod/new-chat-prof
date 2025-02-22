@@ -1,10 +1,11 @@
-import Fastify from "fastify";
-import proxy from "@fastify/http-proxy";
 import cors from "@fastify/cors";
+import proxy from "@fastify/http-proxy";
+import {app} from "../../libs/fastify";
 
-const app = Fastify();
-
-app.register(cors);
+app.register(cors, {
+  origin: "http://localhost:3000",
+  credentials: true,
+});
 
 app.addHook("onRequest", async (request, reply) => {
   console.log("Received request:", request.raw.method, request.raw.url);

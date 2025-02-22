@@ -1,7 +1,5 @@
-import Fastify from "fastify";
-import { schoolRoutes } from "./routes/schoolRoutes";
-
-const app = Fastify();
+import {app} from "../../libs/fastify";
+import {schoolRoutes} from "./routes/schoolRoutes";
 
 app.register(schoolRoutes);
 

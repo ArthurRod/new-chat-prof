@@ -1,4 +1,5 @@
 import {FastifyRequest, FastifyReply} from "fastify";
+import {fastifyCookie} from "@fastify/cookie";
 import bcrypt from "bcrypt";
 import {handleError} from "../../../utils/handle-error";
 import {LoginUserSchema, LoginUserInput} from "../schemas/AuthSchema";
@@ -35,11 +36,14 @@ export class AuthController {
 
       const token = await generateToken(user);
 
+      const cookie = fastifyCookie.serialize("accessToken", token);
+
+      response.header("Set-Cookie", cookie);
+
       return response.code(200).send({
         code: 200,
         status: "OK",
         message: "Successfully",
-        token: token,
       });
     } catch (error) {
       const errorResponse = handleError(error);

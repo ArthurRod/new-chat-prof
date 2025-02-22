@@ -1,7 +1,12 @@
-import Fastify from "fastify";
+import {app} from "../../libs/fastify";
+import fastifyCookie, {FastifyCookieOptions} from "@fastify/cookie";
 import {authRoutes} from "./routes/authRoutes";
 
-const app = Fastify();
+app.register(fastifyCookie, {
+  secret: process.env.JWT_SECRET,
+  hook: "onRequest",
+  parseOptions: {httpOnly: true},
+} as FastifyCookieOptions);
 
 app.register(authRoutes);
 
