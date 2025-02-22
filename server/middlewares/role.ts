@@ -1,7 +1,6 @@
-import { FastifyReply, FastifyRequest } from "fastify";
-
-import { Role } from "@prisma/client";
-import { verifyToken } from "../utils/auth-utils";
+import {FastifyReply, FastifyRequest} from "fastify";
+import {Role} from "@prisma/client";
+import {verifyToken} from "../utils/auth-utils";
 
 export function roleMiddleware(role: Role) {
   return async (request: FastifyRequest, response: FastifyReply) => {
