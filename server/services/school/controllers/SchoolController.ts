@@ -3,7 +3,7 @@ import {verifyToken} from "../../../utils/auth-utils";
 import {handleError} from "../../../utils/handle-error";
 import {
   CreateSchoolFullBody,
-  GetSchoolByNameStreetIdQuery,
+  GetSchoolBySchoolCodeQuery,
   GetSchoolBySchoolIdParams,
 } from "../interfaces/SchoolInterfaces";
 import {CreateSchoolFullBodySchema} from "../schemas/SchoolSchema";
@@ -25,12 +25,11 @@ export class SchoolController {
   ) => {
     try {
       const {schoolId} = request.params;
-      const convertedSchoolId = parseInt(schoolId);
       const decoded = await verifyToken(request);
       const decodedUserId = parseInt(decoded.userId);
 
       const school = await this.schoolService.getSchoolBySchoolId(
-        convertedSchoolId,
+        schoolId,
         decodedUserId
       );
 
@@ -49,23 +48,22 @@ export class SchoolController {
     }
   };
 
-  getSchoolByNameStreetId = async (
-    request: FastifyRequest<{Querystring: GetSchoolByNameStreetIdQuery}>,
+  getSchoolBySchoolCode = async (
+    request: FastifyRequest<{Querystring: GetSchoolBySchoolCodeQuery}>,
     response: FastifyReply
   ) => {
     try {
-      const {nameStreetId} = request.query;
+      const {schoolCode} = request.query;
 
-      const schools =
-        await this.schoolService.getSchoolByNameStreetId(nameStreetId);
+      const school = await this.schoolService.getSchoolBySchoolCode(schoolCode);
 
-      if (!schools) throw new Error("NOT_FOUND");
+      if (!school) throw new Error("NOT_FOUND");
 
       return response.code(200).send({
         code: 200,
         status: "OK",
         message: "Successfully",
-        data: schools,
+        data: school,
       });
     } catch (error) {
       const errorResponse = handleError(error);
@@ -109,7 +107,6 @@ export class SchoolController {
       const newSchool = await this.schoolService.createSchool({
         ...schoolData,
         userId: newUser.id,
-        nameStreetId: `${newUser.id} - ${schoolData.name} - ${schoolAddressData.street}`,
       });
 
       const schoolAddress = await this.schoolAddressService.createSchoolAddress(
