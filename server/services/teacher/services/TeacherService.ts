@@ -1,15 +1,14 @@
 import axios from "axios";
-import { prisma } from "../../../libs/prisma";
-import { TeacherInput } from "../schemas/TeacherSchema";
-import { CreateUserInput } from "../schemas/UserSchema";
+import {prisma} from "../../../libs/prisma";
+import {CreateTeacherBody} from "../interfaces/TeacherInterfaces";
+import {CreateUserBody} from "../interfaces/UserInterfaces";
 
 export class TeacherService {
-  getTeacherByUserId = async (userId: number) => {
+  getTeacherByTeacherId = async (teacherId: string, userId: number) => {
     const teacher = await prisma.teacher.findUnique({
-      where: { userId: userId },
+      where: {uuid: teacherId, userId},
       select: {
-        id: true,
-        userId: true,
+        uuid: true,
         name: true,
       },
     });
@@ -17,27 +16,16 @@ export class TeacherService {
     return teacher;
   };
 
-  createTeacher = async (data: TeacherInput) => {
-    const teacher = await prisma.teacher.create({
-      data: {
-        userId: data.userId,
-        name: data.name,
-        subjects: data.subjects,
-      },
-    });
+  createTeacher = async (data: CreateTeacherBody) => {
+    const teacher = await prisma.teacher.create({data});
 
     return teacher;
   };
 
-  createTeacherUser = async (data: CreateUserInput) => {
-    const teacherData = await axios.post("http://localhost:3333/api/users", {
-      email: data.email,
-      password: data.password,
-      confirmPassword: data.confirmPassword,
-      role: data.role,
-    });
+  createTeacherUser = async (data: CreateUserBody) => {
+    const userData = await axios.post("http://localhost:3333/api/users", data);
 
-    const user = teacherData.data.data;
+    const user = userData.data.data;
 
     return user;
   };

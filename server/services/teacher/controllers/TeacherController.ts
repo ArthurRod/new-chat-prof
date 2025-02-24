@@ -1,10 +1,12 @@
-import { FastifyRequest, FastifyReply } from "fastify";
+import {FastifyReply, FastifyRequest} from "fastify";
+import {verifyToken} from "../../../utils/auth-utils";
+import {handleError} from "../../../utils/handle-error";
 import {
-  CreateTeacherInput,
-  CreateTeacherSchema,
-} from "../schemas/TeacherSchema";
-import { handleError } from "../../../utils/handle-error";
-import { TeacherService } from "../services/TeacherService";
+  CreateTeacherFullBody,
+  GetTeacherByTeacherIdParams,
+} from "../interfaces/TeacherInterfaces";
+import {CreateTeacherFullBodySchema} from "../schemas/TeacherSchema";
+import {TeacherService} from "../services/TeacherService";
 
 export class TeacherController {
   private teacherService: TeacherService;
@@ -13,22 +15,21 @@ export class TeacherController {
     this.teacherService = new TeacherService();
   }
 
-  getTeacherByUserId = async (
-    request: FastifyRequest<{ Params: { userId: string } }>,
-    response: FastifyReply,
+  getTeacherByTeacherId = async (
+    request: FastifyRequest<{Params: GetTeacherByTeacherIdParams}>,
+    response: FastifyReply
   ) => {
     try {
-      const { userId } = request.params;
-      const teacher = await this.teacherService.getTeacherByUserId(
-        parseInt(userId),
+      const {teacherId} = request.params;
+      const decoded = await verifyToken(request);
+      const decodedUserId = parseInt(decoded.userId);
+
+      const teacher = await this.teacherService.getTeacherByTeacherId(
+        teacherId,
+        decodedUserId
       );
 
-      if (!teacher)
-        return response.status(404).send({
-          code: 404,
-          status: "Not Found",
-          message: "Não foram encontrados professores com esse identificador",
-        });
+      if (!teacher) throw new Error("NOT_FOUND");
 
       return response.code(200).send({
         code: 200,
@@ -44,26 +45,30 @@ export class TeacherController {
   };
 
   createTeacher = async (
-    request: FastifyRequest<{ Body: CreateTeacherInput }>,
-    response: FastifyReply,
+    request: FastifyRequest<{Body: CreateTeacherFullBody}>,
+    response: FastifyReply
   ) => {
     try {
-      const parsedTeacherBody = CreateTeacherSchema.parse(request.body);
+      const parsedBody = CreateTeacherFullBodySchema.parse(request.body);
 
       const userData = {
-        email: parsedTeacherBody.email,
-        password: parsedTeacherBody.password,
-        confirmPassword: parsedTeacherBody.confirmPassword,
-        role: parsedTeacherBody.role,
+        email: parsedBody.email,
+        password: parsedBody.password,
+        confirmPassword: parsedBody.confirmPassword,
+        role: parsedBody.role,
       };
-      const newUser = await this.teacherService.createTeacherUser(userData);
 
       const teacherData = {
-        userId: newUser.id,
-        name: parsedTeacherBody.name,
-        subjects: parsedTeacherBody.subjects,
+        name: parsedBody.name,
+        subjects: parsedBody.subjects,
       };
-      const newTeacher = await this.teacherService.createTeacher(teacherData);
+
+      const newUser = await this.teacherService.createTeacherUser(userData);
+
+      const newTeacher = await this.teacherService.createTeacher({
+        ...teacherData,
+        userId: newUser.id,
+      });
 
       return response.code(200).send({
         code: 200,
