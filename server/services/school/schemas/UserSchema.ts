@@ -1,7 +1,7 @@
 import {Role} from "@prisma/client";
 import {z} from "zod";
 
-export const CreateUserSchema = z.object({
+export const CreateUserFullBodySchema = z.object({
   email: z.string().min(6).max(50).email({
     message: "Invalid email format.",
   }),

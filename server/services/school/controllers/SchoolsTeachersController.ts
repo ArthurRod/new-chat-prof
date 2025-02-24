@@ -25,17 +25,17 @@ export class SchoolsTeachersController {
   ) => {
     try {
       const {schoolId} = request.params;
-      const convertedSchoolId = parseInt(schoolId);
       const decoded = await verifyToken(request);
       const decodedUserId = parseInt(decoded.userId);
 
       const schoolsTeachers =
         await this.schoolsTeachersService.getSchoolsTeachersBySchoolId(
-          convertedSchoolId,
+          schoolId,
           decodedUserId
         );
 
-      if (!schoolsTeachers) throw new Error("NOT_FOUND");
+      if (!schoolsTeachers || schoolsTeachers.length === 0)
+        throw new Error("NOT_FOUND");
 
       return response.code(200).send({
         code: 200,
@@ -86,7 +86,6 @@ export class SchoolsTeachersController {
   ) => {
     try {
       const {id} = request.params;
-      const convertedId = parseInt(id);
       const decoded = await verifyToken(request);
       const decodedUserId = parseInt(decoded.userId);
 
@@ -96,8 +95,8 @@ export class SchoolsTeachersController {
 
       const schoolsTeachers =
         await this.schoolsTeachersService.updateSchoolsTeachers(
+          id,
           decodedUserId,
-          convertedId,
           parsedSchoolsTeachersBody.isApproved
         );
 

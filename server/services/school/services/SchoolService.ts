@@ -4,31 +4,41 @@ import {CreateSchoolBody} from "../interfaces/SchoolInterfaces";
 import {CreateUserBody} from "../interfaces/UserInterfaces";
 
 export class SchoolService {
-  getSchoolBySchoolId = async (schoolId: number, userId: number) => {
+  getSchoolBySchoolId = async (schoolId: string, userId: number) => {
     const school = await prisma.school.findUnique({
-      where: {id: schoolId, userId},
+      where: {uuid: schoolId, userId},
       select: {
-        id: true,
-        userId: true,
+        uuid: true,
         name: true,
         fixedPeriod: true,
-        schoolAddress: true,
+        schoolAddress: {
+          select: {
+            uuid: true,
+            zipCode: true,
+            country: true,
+            state: true,
+            city: true,
+            neighborhood: true,
+            street: true,
+            number: true,
+            complement: true,
+          },
+        },
       },
     });
 
     return school;
   };
 
-  getSchoolByNameStreetId = async (nameStreetId: string) => {
-    const schools = await prisma.school.findMany({
+  getSchoolBySchoolCode = async (schoolCode: string) => {
+    const schools = await prisma.school.findUnique({
       where: {
-        nameStreetId: {
-          contains: nameStreetId,
-        },
+        schoolCode,
       },
       select: {
-        userId: true,
-        nameStreetId: true,
+        uuid: true,
+        schoolCode: true,
+        name: true,
       },
     });
 

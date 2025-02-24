@@ -3,7 +3,6 @@ import {z} from "zod";
 
 export const CreateSchoolSchema = z.object({
   userId: z.number(),
-  nameStreetId: z.string().min(1).max(191),
   name: z.string().min(1).max(191),
   fixedPeriod: z.nativeEnum(FixedPeriod, {
     errorMap: () => {

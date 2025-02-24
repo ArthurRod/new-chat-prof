@@ -2,18 +2,22 @@ import {prisma} from "../../../libs/prisma";
 import {CreateSchoolsTeachersBody} from "../interfaces/SchoolsTeachersInterfaces";
 
 export class SchoolsTeachersService {
-  getSchoolsTeachersBySchoolId = async (schoolId: number, userId: number) => {
+  getSchoolsTeachersBySchoolId = async (schoolId: string, userId: number) => {
     const schoolsTeachers = await prisma.schoolsTeachers.findMany({
       where: {
-        schoolId,
+        schoolUuid: schoolId,
         school: {
           userId,
         },
       },
       select: {
-        id: true,
+        uuid: true,
         isApproved: true,
-        teacher: true,
+        teacher: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 
@@ -23,8 +27,8 @@ export class SchoolsTeachersService {
   createSchoolsTeachers = async (data: CreateSchoolsTeachersBody) => {
     const schoolsTeachers = await prisma.schoolsTeachers.create({
       data: {
-        schoolId: data.schoolId,
-        teacherId: data.teacherId,
+        schoolUuid: data.schoolId,
+        teacherUuid: data.teacherId,
       },
     });
 
@@ -32,19 +36,25 @@ export class SchoolsTeachersService {
   };
 
   updateSchoolsTeachers = async (
-    id: number,
+    id: string,
     userId: number,
     isApproved: boolean
   ) => {
     const schoolsTeachers = await prisma.schoolsTeachers.update({
       where: {
-        id: id,
+        uuid: id,
         school: {
           userId,
         },
       },
       data: {
         isApproved,
+      },
+      select: {
+        uuid: true,
+        isApproved: true,
+        schoolUuid: true,
+        teacherUuid: true,
       },
     });
 

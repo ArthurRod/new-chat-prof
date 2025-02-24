@@ -5,7 +5,7 @@ import {SchoolController} from "../controllers/SchoolController";
 import {SchoolsTeachersController} from "../controllers/SchoolsTeachersController";
 import {
   CreateSchoolFullBody,
-  GetSchoolByNameStreetIdQuery,
+  GetSchoolBySchoolCodeQuery,
   GetSchoolBySchoolIdParams,
 } from "../interfaces/SchoolInterfaces";
 import {
@@ -25,16 +25,24 @@ export async function schoolRoutes(app: FastifyInstance) {
     schoolController.getSchoolBySchoolId
   );
 
-  /* Get school by NameStreetId */
-  app.get<{Querystring: GetSchoolByNameStreetIdQuery}>(
+  /* Get school by SchoolCode */
+  app.get<{Querystring: GetSchoolBySchoolCodeQuery}>(
     "/api/schools",
-    schoolController.getSchoolByNameStreetId
+    {preHandler: [isAuthMiddleware(), roleMiddleware("TEACHER")]},
+    schoolController.getSchoolBySchoolCode
   );
 
   /* Create school */
   app.post<{Body: CreateSchoolFullBody}>(
     "/api/schools",
     schoolController.createSchool
+  );
+
+  /* Create schools teachers */
+  app.post<{Body: CreateSchoolsTeachersBody}>(
+    "/api/schools/teachers",
+    {preHandler: [isAuthMiddleware(), roleMiddleware("TEACHER")]},
+    schoolsTeachersController.createSchoolsTeachers
   );
 
   /* Get schools teachers by SchoolId */
@@ -44,15 +52,9 @@ export async function schoolRoutes(app: FastifyInstance) {
     schoolsTeachersController.getSchoolsTeachersBySchoolId
   );
 
-  /* Create schools teachers */
-  app.post<{Body: CreateSchoolsTeachersBody}>(
-    "/api/schools/teachers",
-    schoolsTeachersController.createSchoolsTeachers
-  );
-
-  /* Update schools teachers by schoolId*/
+  /* Update schools teachers by id*/
   app.put<{Params: UpdateSchoolsTeachersParams}>(
-    "/api/schools/:schoolId/teachers/:id",
+    "/api/schools/teachers/:id",
     {preHandler: [isAuthMiddleware(), roleMiddleware("SCHOOL")]},
     schoolsTeachersController.updateSchoolsTeachers
   );

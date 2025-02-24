@@ -4,8 +4,8 @@ import {
   CreateSchoolSchema,
 } from "../schemas/SchoolSchema";
 
-export interface GetSchoolByNameStreetIdQuery {
-  nameStreetId: string;
+export interface GetSchoolBySchoolCodeQuery {
+  schoolCode: string;
 }
 
 export interface GetSchoolBySchoolIdParams {
