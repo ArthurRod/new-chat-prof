@@ -1,14 +1,13 @@
 import axios from "axios";
+import {prisma} from "../../../libs/prisma";
 
 export class AuthService {
-  getAuthUserByEmail = async (email: string): Promise<any> => {
-    const userData = await axios.get("http://localhost:3333/api/users", {
-      params: {
-        email: email,
+  getUserByEmail = async (email: string) => {
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
       },
     });
-
-    const user = userData.data.data;
 
     return user;
   };

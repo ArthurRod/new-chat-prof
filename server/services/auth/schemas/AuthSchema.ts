@@ -12,5 +12,3 @@ export const LoginUserSchema = z.object({
       message: "Invalid password format.",
     }),
 });
-
-export type LoginUserInput = z.infer<typeof LoginUserSchema>;
