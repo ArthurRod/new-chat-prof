@@ -14,7 +14,8 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(uuid())
 
   email    String @unique @db.VarChar(191)
   password String
@@ -26,11 +27,12 @@ model User {
 }
 
 model School {
-  id Int @id @default(autoincrement())
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(uuid())
 
-  nameStreetId String      @unique @db.VarChar(191)
-  name         String      @db.VarChar(191)
-  fixedPeriod  FixedPeriod
+  schoolCode  String      @unique @default(uuid())
+  name        String      @db.VarChar(191)
+  fixedPeriod FixedPeriod
 
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int  @unique
@@ -42,7 +44,8 @@ model School {
 }
 
 model SchoolAddress {
-  id Int @id @default(autoincrement())
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(uuid())
 
   zipCode      Int
   country      String  @db.VarChar(191)
@@ -58,21 +61,23 @@ model SchoolAddress {
 }
 
 model SchoolsTeachers {
-  id Int @id @default(autoincrement())
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(uuid())
 
   isApproved Boolean @default(false)
 
-  school    School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  schoolId  Int
-  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  teacherId Int
+  school      School  @relation(fields: [schoolUuid], references: [uuid], onDelete: Cascade)
+  schoolUuid  String
+  teacher     Teacher @relation(fields: [teacherUuid], references: [uuid], onDelete: Cascade)
+  teacherUuid String
 
-  @@unique([schoolId, teacherId])
+  @@unique([schoolUuid, teacherUuid])
   @@map("schools_teachers")
 }
 
 model SchoolsParents {
-  id Int @id @default(autoincrement())
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(uuid())
 
   isApproved Boolean @default(false)
 
@@ -86,7 +91,8 @@ model SchoolsParents {
 }
 
 model Teacher {
-  id Int @id @default(autoincrement())
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(uuid())
 
   name     String @db.VarChar(191)
   subjects String @db.VarChar(191)
@@ -98,7 +104,8 @@ model Teacher {
 }
 
 model Parent {
-  id Int @id @default(autoincrement())
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(uuid())
 
   name String @db.VarChar(191)
 
@@ -110,7 +117,8 @@ model Parent {
 }
 
 model Student {
-  id Int @id @default(autoincrement())
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(uuid())
 
   name String @db.VarChar(191)
 
@@ -124,7 +132,8 @@ model Student {
 }
 
 model Grade {
-  id Int @id @default(autoincrement())
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(uuid())
 
   typeGrade     TypeGrade
   value         Int
@@ -137,7 +146,8 @@ model Grade {
 }
 
 model Observation {
-  id Int @id @default(autoincrement())
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(uuid())
 
   description String
   date        DateTime
