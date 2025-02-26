@@ -63,7 +63,7 @@ export function SchoolForm() {
     };
 
     axios
-      .post("http://localhost:3333/api/admin/schools", school)
+      .post("http://localhost:3333/api/schools", school)
       .then((response) => {
         console.log("Response:", response.data);
       })

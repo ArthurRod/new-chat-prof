@@ -141,7 +141,7 @@ export function UserForm() {
                   <Button
                     type="button"
                     className="absolute right-0 top-0 bg-transparent"
-                    onClick={() => toggleInputType("password")}
+                    onClick={() => toggleInputType("confirmPassword")}
                   >
                     {inputRepeatPasswordType === "password" ? (
                       <Eye color="#00303a" />

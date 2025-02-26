@@ -26,7 +26,7 @@ export function SchoolAddressForm() {
   const form = useForm<CreateSchoolAddressBody>({
     resolver: zodResolver(CreateSchoolAddressSchema),
     defaultValues: {
-      zipCode: schoolAddress?.zipCode ? schoolAddress.zipCode : 0,
+      zipCode: schoolAddress?.zipCode ? schoolAddress.zipCode : "",
       country: schoolAddress?.country ? schoolAddress.country : "",
       state: schoolAddress?.state ? schoolAddress.state : "",
       city: schoolAddress?.city ? schoolAddress.city : "",
@@ -34,7 +34,7 @@ export function SchoolAddressForm() {
         ? schoolAddress.neighborhood
         : "",
       street: schoolAddress?.street ? schoolAddress.street : "",
-      number: schoolAddress?.number ? schoolAddress.number : 0,
+      number: schoolAddress?.number ? schoolAddress.number : "",
       complement: schoolAddress?.complement ? schoolAddress.complement : "",
     },
   });
@@ -88,33 +88,35 @@ export function SchoolAddressForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex w-full flex-col items-center p-4 lg:w-96 lg:p-8"
       >
-        <FormField
-          control={form.control}
-          name="zipCode"
-          render={({ field }) => (
-            <FormItem className="mb-4 w-full">
-              <FormLabel>CEP</FormLabel>
-              <FormControl>
-                <Input type="number" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="mb-4 flex gap-4">
+          <FormField
+            control={form.control}
+            name="zipCode"
+            render={({ field }) => (
+              <FormItem className="w-1/2">
+                <FormLabel>CEP</FormLabel>
+                <FormControl>
+                  <Input type="text" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="country"
-          render={({ field }) => (
-            <FormItem className="mb-4 w-full">
-              <FormLabel>País</FormLabel>
-              <FormControl>
-                <Input type="text" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="country"
+            render={({ field }) => (
+              <FormItem className="w-1/2">
+                <FormLabel>País</FormLabel>
+                <FormControl>
+                  <Input type="text" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
@@ -179,7 +181,7 @@ export function SchoolAddressForm() {
             <FormItem className="mb-4 w-full">
               <FormLabel>Número</FormLabel>
               <FormControl>
-                <Input type="number" {...field} />
+                <Input type="text" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
