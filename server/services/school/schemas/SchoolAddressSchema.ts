@@ -1,13 +1,22 @@
 import {z} from "zod";
 
 export const SchoolAddressSchema = z.object({
-  zipCode: z.number().min(10000).max(99999999),
+  zipCode: z
+    .string()
+    .min(5, {message: "Type a valid zipCode"})
+    .max(8, {message: "Type a valid zipCode"})
+    .regex(/^\d+$/, {message: "O CEP deve conter apenas números"})
+    .transform((val) => Number(val)),
   country: z.string().min(1).max(191),
   state: z.string().min(1).max(191),
   city: z.string().min(1).max(191),
   neighborhood: z.string().min(1).max(191),
   street: z.string().min(1).max(191),
-  number: z.number().min(1).max(999999),
+  number: z
+    .string()
+    .min(1)
+    .regex(/^\d+$/, {message: "O número deve conter apenas números"})
+    .transform((val) => Number(val)),
   complement: z.string().max(191),
 });
 
