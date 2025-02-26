@@ -21,6 +21,10 @@ import { LoginUserSchema } from "@/schemas/AuthSchema";
 export function SigninForm() {
   const form = useForm<LoginUserBody>({
     resolver: zodResolver(LoginUserSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
   // const router = useRouter();
