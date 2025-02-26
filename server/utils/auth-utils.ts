@@ -2,13 +2,14 @@ import {jwtVerify, SignJWT} from "jose";
 import dotenv from "dotenv";
 import {FastifyRequest, RouteGenericInterface} from "fastify";
 import {DecodedUser} from "../types/DecodedUser";
+import {User} from "@prisma/client";
 
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const secret = new TextEncoder().encode(JWT_SECRET);
 
-export async function generateToken(user: any) {
+export async function generateToken(user: User) {
   const token = await new SignJWT({
     userId: user.id,
     email: user.email,
