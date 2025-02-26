@@ -4,22 +4,22 @@ const errorCodeMapping: Record<string, (error: string) => Error> = {
   NOT_FOUND: () => ({
     code: 404,
     status: "Not Found",
-    message: "Não foi possível encontrar os registros",
+    message: "Unable to find records",
   }),
   NOT_FOUND_USER: () => ({
     code: 404,
     status: "Not Found",
-    message: "Usuário não encontrado",
+    message: "User not found",
   }),
   UNAUTHORIZED: () => ({
     code: 401,
     status: "Unauthorized",
-    message: "Senha incorreta",
+    message: "Incorrect password",
   }),
   default: () => ({
     code: 500,
     status: "Internal Server Error",
-    message: "Erro ao realizar a ação",
+    message: "Error performing the action",
   }),
 };
 

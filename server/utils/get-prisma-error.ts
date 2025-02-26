@@ -5,30 +5,24 @@ const errorCodeMapping: Record<
   string,
   (error: Prisma.PrismaClientKnownRequestError) => PrismaError
 > = {
-  P2002: (error: Prisma.PrismaClientKnownRequestError) => {
-    const modelName = error.meta?.modelName;
-    const target = error.meta?.target;
-
+  P2002: () => {
     return {
       code: 409,
       status: "Conflict",
-      message: `Esse ${target} já está associado á um ${modelName}.`,
+      message: "This record already exists.",
     };
   },
-  P2003: (error: Prisma.PrismaClientKnownRequestError) => {
-    const field_name = error.meta!.field_name! as string;
-
+  P2003: () => {
     return {
       code: 400,
       status: "Bad Request",
-      message: `O valor apontado em ${field_name} faz referência a um registro inexistente.`,
+      message: "The value references a non-existent record.",
     };
   },
   default: () => ({
     code: 500,
     status: "Internal Server Error",
-    message:
-      "Ocorreu um erro no servidor. Por favor, tente novamente mais tarde.",
+    message: "A server error has occurred. Please try again later.",
     errors: {},
   }),
 };
