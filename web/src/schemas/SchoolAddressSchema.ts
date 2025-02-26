@@ -5,8 +5,9 @@ export const CreateSchoolAddressSchema = z.object({
     .string()
     .min(5, { message: "Digite um CEP válido" })
     .max(8, { message: "Digite um CEP válido" })
-    .regex(/^\d+$/, { message: "O CEP deve conter apenas números" })
-    .transform((val) => Number(val)),
+    .regex(/^\d{5}-?\d{3}$/, {
+      message: "O CEP deve estar no formato 12345-678 ou 12345678",
+    }),
   country: z
     .string()
     .min(1, {
@@ -50,8 +51,10 @@ export const CreateSchoolAddressSchema = z.object({
   number: z
     .string()
     .min(1, { message: "Este campo é obrigatório" })
-    .regex(/^\d+$/, { message: "O número deve conter apenas números" })
-    .transform((val) => Number(val)),
+    .regex(/^\d+[a-zA-Z]?$/, {
+      message:
+        "O número deve conter apenas números e, opcionalmente, uma letra no final",
+    }),
   complement: z.string().max(191, {
     message: "Este campo é obrigatório",
   }),

@@ -44,5 +44,5 @@ export const CreateUserSchema = z
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "As senhas não estão iguais",
-    path: ["customConfirmError"],
+    path: ["confirmPassword"],
   });
