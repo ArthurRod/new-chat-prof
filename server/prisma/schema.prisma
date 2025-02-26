@@ -47,13 +47,13 @@ model SchoolAddress {
   id   Int    @id @default(autoincrement())
   uuid String @unique @default(uuid())
 
-  zipCode      Int
+  zipCode      String  @db.VarChar(20)
   country      String  @db.VarChar(191)
   state        String  @db.VarChar(191)
   city         String  @db.VarChar(191)
   neighborhood String  @db.VarChar(191)
   street       String  @db.VarChar(191)
-  number       Int
+  number       String  @db.VarChar(20)
   complement   String? @db.VarChar(191)
 
   school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
