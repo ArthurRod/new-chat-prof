@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import {FastifyRequest, RouteGenericInterface} from "fastify";
 import {DecodedUser} from "../types/DecodedUser";
 import {User} from "@prisma/client";
+import {handleTokenError} from "./get-token-error";
 
 dotenv.config();
 
@@ -44,7 +45,9 @@ export async function verifyToken<T extends RouteGenericInterface>(
 
     return decoded;
   } catch (error: any) {
-    throw new Error(error.message);
+    const tokenError = handleTokenError(error);
+
+    throw new Error(tokenError);
   }
 }
 
