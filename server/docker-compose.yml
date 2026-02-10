@@ -1,0 +1,40 @@
+services:
+  api-gateway:
+    build:
+      context: ./services/api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "3333:3333"
+    depends_on:
+      - auth
+      - user
+      - school
+      - teacher
+
+  auth:
+    build:
+      context: ./services/auth
+      dockerfile: Dockerfile
+    ports:
+      - "3334:3334"
+
+  user:
+    build:
+      context: ./services/user
+      dockerfile: Dockerfile
+    ports:
+      - "3335:3335"
+
+  school:
+    build:
+      context: ./services/school
+      dockerfile: Dockerfile
+    ports:
+      - "3336:3336"
+
+  teacher:
+    build:
+      context: ./services/teacher
+      dockerfile: Dockerfile
+    ports:
+      - "3337:3337"

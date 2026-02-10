@@ -4,7 +4,7 @@ import {FastifyReply, FastifyRequest} from "fastify";
 import {generateToken} from "../../../utils/auth-utils";
 import {handleError} from "../../../utils/handle-error";
 import {LoginUserBody} from "../interfaces/AuthInterfaces";
-import {LoginUserSchema} from "../schemas/AuthSchema";
+import {LoginUserSchema} from "../validators/AuthSchema";
 import {AuthService} from "../services/AuthService";
 
 export class AuthController {

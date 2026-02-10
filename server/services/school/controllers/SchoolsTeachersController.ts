@@ -9,7 +9,7 @@ import {
 import {
   CreateSchoolsTeachersSchema,
   UpdateSchoolsTeachersSchema,
-} from "../schemas/SchoolsTeachersSchema";
+} from "../validators/SchoolsTeachersSchema";
 import {SchoolsTeachersService} from "../services/SchoolsTeachersService";
 
 export class SchoolsTeachersController {

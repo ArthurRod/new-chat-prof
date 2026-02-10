@@ -7,7 +7,7 @@ export default function AuthLayout({
   children: ReactNode;
 }>) {
   return (
-    <main className="flex min-h-screen flex-col lg:flex-row lg:overflow-hidden">
+    <main className="flex flex-col bg-neutralLight lg:flex-row lg:overflow-hidden">
       <section
         id="auth-left-banner"
         className="flex w-full items-center justify-center bg-primary lg:h-screen lg:w-1/2"

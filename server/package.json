@@ -6,6 +6,7 @@
   "author": "Arthur Rodrigues <contato.arthurrod@gmail.com> (https://github.com/ArthurRod)",
   "license": "ISC",
   "scripts": {
+    "services:up": "docker compose up",
     "dev": "concurrently \"npm run dev:api-gateway\" \"npm run dev:auth\" \"npm run dev:user\" \"npm run dev:school\" \"npm run dev:teacher\"",
     "dev:api-gateway": "tsx watch services/api-gateway/index.ts",
     "dev:auth": "tsx watch services/auth/index.ts",
@@ -33,7 +34,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
     "prettier": "^3.4.2",
-    "prisma": "^6.1.0",
+    "prisma": "^6.10.1",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }

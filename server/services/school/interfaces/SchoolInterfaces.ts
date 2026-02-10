@@ -2,7 +2,7 @@ import {z} from "zod";
 import {
   CreateSchoolFullBodySchema,
   CreateSchoolSchema,
-} from "../schemas/SchoolSchema";
+} from "../validators/SchoolSchema";
 
 export interface GetSchoolBySchoolCodeQuery {
   schoolCode: string;

@@ -7,8 +7,7 @@ export default function AdminLayout({
   children: ReactNode;
 }>) {
   return (
-    <main className="min-h-screen bg-white">
-      {" "}
+    <main>
       <AdminHeader />
       {children}
     </main>

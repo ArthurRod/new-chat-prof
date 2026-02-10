@@ -2,7 +2,7 @@ import {z} from "zod";
 import {
   CreateTeacherFullBodySchema,
   CreateTeacherSchema,
-} from "../schemas/TeacherSchema";
+} from "../validators/TeacherSchema";
 
 export interface GetTeacherByTeacherIdParams {
   teacherId: string;

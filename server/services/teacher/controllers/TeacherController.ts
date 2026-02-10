@@ -5,7 +5,7 @@ import {
   CreateTeacherFullBody,
   GetTeacherByTeacherIdParams,
 } from "../interfaces/TeacherInterfaces";
-import {CreateTeacherFullBodySchema} from "../schemas/TeacherSchema";
+import {CreateTeacherFullBodySchema} from "../validators/TeacherSchema";
 import {TeacherService} from "../services/TeacherService";
 
 export class TeacherController {

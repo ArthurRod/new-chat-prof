@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import {FastifyReply, FastifyRequest} from "fastify";
 import {handleError} from "../../../utils/handle-error";
 import {CreateUserFullBody} from "../interfaces/UserInterfaces";
-import {CreateUserSchema} from "../schemas/UserSchema";
+import {CreateUserSchema} from "../validators/UserSchema";
 import {UserService} from "../services/UserService";
 
 export class UserController {

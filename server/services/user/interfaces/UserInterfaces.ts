@@ -2,7 +2,7 @@ import {z} from "zod";
 import {
   CreateUserFullBodySchema,
   CreateUserSchema,
-} from "../schemas/UserSchema";
+} from "../validators/UserSchema";
 
 type CreateUserType = z.infer<typeof CreateUserSchema>;
 export interface CreateUserBody extends CreateUserType {}

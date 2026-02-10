@@ -1,7 +1,7 @@
 import axios from "axios";
 import {prisma} from "../../../libs/prisma";
 import {CreateSchoolBody} from "../interfaces/SchoolInterfaces";
-import {CreateUserBody} from "../interfaces/UserInterfaces";
+import {CreateUserFullBody} from "../interfaces/UserInterfaces";
 
 export class SchoolService {
   getSchoolBySchoolId = async (schoolId: string, userId: number) => {
@@ -51,7 +51,7 @@ export class SchoolService {
     return school;
   };
 
-  createSchoolUser = async (data: CreateUserBody) => {
+  createSchoolUser = async (data: CreateUserFullBody) => {
     const userData = await axios.post("http://localhost:3333/api/users", data);
 
     const user = userData.data.data;

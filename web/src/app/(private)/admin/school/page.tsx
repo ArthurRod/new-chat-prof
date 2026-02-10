@@ -1,6 +1,8 @@
+import { Alert } from "@/components/Alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Search, Trash } from "lucide-react";
 import { FilterMenu } from "./_components/FilterMenu";
 
 export default function SchoolTeachers() {
@@ -29,6 +31,9 @@ export default function SchoolTeachers() {
                 Matéria(s)
               </th>
               <th className="border-2 border-neutralLight p-4 text-secondary">
+                Status
+              </th>
+              <th className="border-2 border-neutralLight p-4 text-secondary">
                 Ações
               </th>
             </tr>
@@ -41,7 +46,23 @@ export default function SchoolTeachers() {
               <td className="text-primary-dark border-2 border-neutralLight p-4">
                 Portugues, Matematica, Filosofia
               </td>
-              <th className="border-2 border-neutralLight p-4"></th>
+              <td className="text-primary-dark border-2 border-neutralLight p-4">
+                <div className="flex items-center justify-center gap-4">
+                  Aprovado
+                  <Switch />
+                </div>
+              </td>
+              <th className="border-2 border-neutralLight p-4">
+                <Alert
+                  trigger={
+                    <Button type="button" className="bg-white shadow-none">
+                      <Trash color="#ef4444" />
+                    </Button>
+                  }
+                  title="Tem certeza que deseja excluir?"
+                  content="Esta ação não poderá ser desfeita"
+                />
+              </th>
             </tr>
           </tbody>
         </table>

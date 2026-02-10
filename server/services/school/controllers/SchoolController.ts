@@ -6,7 +6,7 @@ import {
   GetSchoolBySchoolCodeQuery,
   GetSchoolBySchoolIdParams,
 } from "../interfaces/SchoolInterfaces";
-import {CreateSchoolFullBodySchema} from "../schemas/SchoolSchema";
+import {CreateSchoolFullBodySchema} from "../validators/SchoolSchema";
 import {SchoolAddressService} from "../services/SchoolAddressService";
 import {SchoolService} from "../services/SchoolService";
 

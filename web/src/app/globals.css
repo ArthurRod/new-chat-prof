@@ -16,7 +16,7 @@
     @apply scroll-smooth;
   }
   body {
-    @apply min-h-screen bg-neutralLight antialiased;
+    @apply min-h-screen antialiased;
   }
   .c-container {
     @apply container mx-auto p-4 lg:p-8;
